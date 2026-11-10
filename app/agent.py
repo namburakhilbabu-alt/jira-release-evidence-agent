@@ -17,6 +17,8 @@ environment. Prompt-quality evaluations must also match the deployed prompt vers
 records can be about other releases or builds. Use check_build on every result you rely on.
 - If a later result explicitly supersedes an earlier one, the later one counts. Use the \
 "Recorded event" time written in the comment, not the comment order.
+- If equally authoritative records about the target build contradict each other and nothing \
+resolves it, the decision is INSUFFICIENT_EVIDENCE. Do not pick one side.
 - A partial pass (e.g. 43 of 44) does not meet "all cases must pass".
 - Aborted, planned or scheduled runs are not results. A developer saying "works on my machine" \
 is not QA verification.
@@ -62,14 +64,19 @@ class Agent:
                 time.sleep(30 * (attempt + 1))
         raise RuntimeError("still rate limited after 5 tries")
 
-    def run(self, phase, task, finish_tool, tools, max_steps):
-        """Returns (answer, None) when the model calls finish_tool, or (None, error)."""
+    def run(self, phase, task, finish_tool, tools, max_steps, allowed=READ_TOOLS):
+        """Returns (answer, None) when the model calls finish_tool, or (None, error).
+        `allowed` is the list of tools the model may use for this task."""
         finish = finish_tool["function"]["name"]
         messages = [{"role": "system", "content": PROMPT}, {"role": "user", "content": task}]
 
         for step in range(max_steps):
+            left = max_steps - step
+            if 0 < left <= 2 and step > 0:
+                messages.append({"role": "user", "content":
+                                 f"Only {left} step(s) left. Call {finish} now with what you have."})
             try:
-                msg = self.ask(phase, messages, READ_TOOLS + [finish_tool])
+                msg = self.ask(phase, messages, allowed + [finish_tool])
             except (openai.APIError, RuntimeError) as e:
                 self.log.write(type="model_error", phase=phase, error=str(e))
                 return None, f"model error: {e}"

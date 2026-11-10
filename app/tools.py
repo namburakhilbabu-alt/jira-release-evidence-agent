@@ -34,6 +34,9 @@ READ_TOOLS = [
          ["requirement", "issue", "comment_id"]),
 ]
 
+# Step 1 only needs these two, so the model can't drift into assessing.
+FIND_TOOLS = READ_TOOLS[:2]
+
 EVIDENCE = {"type": "array", "items": {"type": "object", "properties": {
     "issue": {"type": "string"}, "comment_id": {"type": "string"}, "note": {"type": "string"}},
     "required": ["issue", "comment_id", "note"]}}

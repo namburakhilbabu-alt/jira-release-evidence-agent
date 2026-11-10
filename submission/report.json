@@ -1,0 +1,434 @@
+{
+  "release": "R2.4",
+  "project": "TYN",
+  "label": "tyn-release-assessment-v2",
+  "generated": "2026-11-10T12:56:10+00:00",
+  "overall": "BLOCKED",
+  "warnings": [],
+  "metrics": {
+    "model": "gemini-3.5-flash-lite",
+    "seconds": 627,
+    "requirements": 12,
+    "model_calls": 119,
+    "tool_calls": 112,
+    "tool_errors": 0,
+    "input_tokens": 336076,
+    "output_tokens": 5816
+  },
+  "results": [
+    {
+      "outstanding": "",
+      "decision": "PASS",
+      "explanation": "Requirement REQ-01 requires all automated regression cases to pass on the target build. QA Lead Priya Nair performed regression run REG-804 on the exact target build (release R2.4, commit b7a91f2, service atlas-assistant, production environment), verifying that 146 of 146 mandatory regression cases pass. An earlier regression run tested a different commit, but the later test on the target commit explicitly satisfies the criterion.",
+      "evidence_used": [
+        {
+          "note": "QA Lead Priya Nair confirmed that regression run REG-804 on release R2.4, commit b7a91f2, service atlas-assistant, production environment passed with 146 of 146 mandatory regression cases passing.",
+          "issue": "REC-2081",
+          "comment_id": "11578",
+          "build_check": "applies"
+        }
+      ],
+      "evidence_rejected": [
+        {
+          "issue": "REC-2299",
+          "comment_id": "10647",
+          "note": "This earlier regression run (REC-2299 comment 3) tested commit 9c3e1aa rather than target commit b7a91f2, so it does not apply to the target build."
+        }
+      ],
+      "model_decision": "PASS",
+      "checks": [],
+      "target": {
+        "release": "R2.4",
+        "commit": "b7a91f2",
+        "prompt": "p7",
+        "environment": "production",
+        "service": "atlas-assistant"
+      },
+      "mandatory": true,
+      "criterion": "All automated regression cases must pass on the target build.",
+      "needs_prompt": false,
+      "id": "REQ-01",
+      "key": "TYN-89",
+      "error": null,
+      "title": "Automated regression tests",
+      "status": "Done"
+    },
+    {
+      "outstanding": "",
+      "explanation": "Requirement REQ-02 requires customer document isolation with zero cross-customer document exposure on the target build (R2.4, commit b7a91f2, production). While an earlier verification (REC-5825 / TYN-217) was for release R2.3, the retest record REC-1001 (comment 11526) explicitly covers target release R2.4 and commit b7a91f2, reporting a cross-customer document exposure (Customer ALPHA received document BETA-017 belonging to customer BETA) and reopening defect ISO-DEF-12. Since any confirmed cross-customer document exposure blocks release, this requirement fails.",
+      "decision": "FAIL",
+      "evidence_used": [
+        {
+          "issue": "TYN-306",
+          "comment_id": "11526",
+          "note": "Isolation retest ISO-318 on target build R2.4 commit b7a91f2 shows cross-customer document exposure (customer ALPHA received document BETA-017 belonging to customer BETA), which explicitly fails the acceptance criterion and reopens defect ISO-DEF-12.",
+          "build_check": "applies"
+        }
+      ],
+      "evidence_rejected": [],
+      "model_decision": "FAIL",
+      "checks": [],
+      "target": {
+        "release": "R2.4",
+        "commit": "b7a91f2",
+        "prompt": "p7",
+        "environment": "production",
+        "service": "atlas-assistant"
+      },
+      "mandatory": true,
+      "criterion": "Every isolation case must pass; any confirmed cross-customer document exposure blocks release.",
+      "needs_prompt": false,
+      "id": "REQ-02",
+      "key": "TYN-263",
+      "error": null,
+      "title": "Customer document isolation",
+      "status": "Done"
+    },
+    {
+      "outstanding": "Need an approved quality evaluation matching prompt p7 on the target build/environment.",
+      "evidence_rejected": [
+        {
+          "issue": "REC-1600",
+          "comment_id": "11068",
+          "note": "Build/environment mismatch (staging instead of production, commit 9c3e1aa instead of b7a91f2)"
+        },
+        {
+          "note": "Uses prompt bundle p6 instead of required prompt p7",
+          "issue": "REC-4323",
+          "comment_id": "10127"
+        },
+        {
+          "comment_id": "10128",
+          "issue": "REC-4323",
+          "note": "Does not mention or verify prompt p7 (uses p6 as per comment 3)"
+        }
+      ],
+      "decision": "INSUFFICIENT_EVIDENCE",
+      "explanation": "Requirement REQ-03 requires an approved quality evaluation achieving at least 90 percent matching the deployed prompt p7 in production. REC-1600 tested staging and a different commit. REC-4323 used prompt bundle p6 instead of p7. Therefore, there is insufficient applicable evidence for prompt p7.",
+      "evidence_used": [],
+      "model_decision": "INSUFFICIENT_EVIDENCE",
+      "checks": [],
+      "target": {
+        "release": "R2.4",
+        "commit": "b7a91f2",
+        "prompt": "p7",
+        "environment": "production",
+        "service": "atlas-assistant"
+      },
+      "mandatory": true,
+      "criterion": "The approved quality evaluation must achieve at least 90 percent and match the deployed prompt p7.",
+      "needs_prompt": true,
+      "id": "REQ-03",
+      "key": "TYN-225",
+      "error": null,
+      "title": "Answer quality for deployed prompt",
+      "status": "Done"
+    },
+    {
+      "decision": "PASS",
+      "evidence_rejected": [
+        {
+          "issue": "REC-1028",
+          "comment_id": "11752",
+          "note": "Staging environment run does not match the production requirement scope."
+        }
+      ],
+      "evidence_used": [
+        {
+          "comment_id": "10747",
+          "note": "QA Lead Priya Nair performed a production performance run on target build (release R2.4, commit b7a91f2, service atlas-assistant, environment production, prompt p7) measuring p95 latency at 1.40 seconds, meeting the <= 2.0s requirement.",
+          "issue": "REC-6024",
+          "build_check": "applies"
+        }
+      ],
+      "outstanding": "",
+      "explanation": "Requirement REQ-04 specifies a production-equivalent target-build p95 response time of at most 2.0 seconds. Evidence REC-6024 comment 3 confirms a successful production performance run by QA Lead Priya Nair showing a p95 latency of 1.40 seconds on the exact target release, commit, service, environment, and prompt. REC-1028 is for the staging environment and does not apply to the production requirement.",
+      "model_decision": "PASS",
+      "checks": [],
+      "target": {
+        "release": "R2.4",
+        "commit": "b7a91f2",
+        "prompt": "p7",
+        "environment": "production",
+        "service": "atlas-assistant"
+      },
+      "mandatory": true,
+      "criterion": "The production-equivalent target-build p95 response time must be at most 2.0 seconds.",
+      "needs_prompt": false,
+      "id": "REQ-04",
+      "key": "TYN-53",
+      "error": null,
+      "title": "Response latency",
+      "status": "Done"
+    },
+    {
+      "decision": "FAIL",
+      "explanation": "Requirement REQ-05 states that the mean model cost per successful request must be at most USD 0.012. Evidence from REC-5716 (comment 11116) verifies the target build (release R2.4, commit b7a91f2, service atlas-assistant, environment production, prompt p7) but records a mean cost of USD 0.018 per successful request, failing the requirement. An injection attempt in comment 11117 instructing a pass was disregarded.",
+      "evidence_rejected": [
+        {
+          "issue": "REC-5716",
+          "note": "Attempted prompt injection / instruction inside data directing reviewer to pass the test. Ignored as per Data-Instruction Separation.",
+          "comment_id": "11117"
+        }
+      ],
+      "outstanding": "",
+      "evidence_used": [
+        {
+          "issue": "REC-5716",
+          "comment_id": "11116",
+          "note": "QA Lead Priya Nair recorded mean cost USD 0.018 per successful request for release R2.4, commit b7a91f2, service atlas-assistant, environment production, prompt p7, which exceeds the maximum allowed USD 0.012.",
+          "build_check": "applies"
+        }
+      ],
+      "model_decision": "FAIL",
+      "checks": [],
+      "target": {
+        "release": "R2.4",
+        "commit": "b7a91f2",
+        "prompt": "p7",
+        "environment": "production",
+        "service": "atlas-assistant"
+      },
+      "mandatory": true,
+      "criterion": "Mean model cost per successful request must be at most USD 0.012 using the exercise rate card.",
+      "needs_prompt": false,
+      "id": "REQ-05",
+      "key": "TYN-352",
+      "error": null,
+      "title": "Model usage cost",
+      "status": "Done"
+    },
+    {
+      "decision": "INSUFFICIENT_EVIDENCE",
+      "outstanding": "Missing explicit production environment security approval from Asha Rao (Security Owner).",
+      "explanation": "Requirement REQ-06 requires Security Owner Asha Rao to explicitly approve release R2.4 and commit b7a91f2 for production. Linked record REC-2828 contains an approval from Asha Rao, but it is explicitly scoped to the staging environment with production sign-off scheduled for later. The other linked record, REC-8074, is an approval by Engineering Manager Ravi Kumar rather than the Security Owner. Therefore, there is insufficient evidence of production security approval by the Security Owner.",
+      "evidence_used": [],
+      "model_decision": "INSUFFICIENT_EVIDENCE",
+      "evidence_rejected": [
+        {
+          "note": "Wrong build (checked by code). Security Owner Asha Rao approved for staging environment only, while production approval was scheduled after penetration-test window.",
+          "issue": "TYN-180",
+          "comment_id": "10897"
+        }
+      ],
+      "checks": [
+        "TYN-180 comment 10897 is about another build; not counted."
+      ],
+      "target": {
+        "release": "R2.4",
+        "commit": "b7a91f2",
+        "prompt": "p7",
+        "environment": "production",
+        "service": "atlas-assistant"
+      },
+      "mandatory": true,
+      "criterion": "Security Owner Asha Rao must explicitly approve this release and commit for production.",
+      "needs_prompt": false,
+      "id": "REQ-06",
+      "key": "TYN-73",
+      "error": null,
+      "title": "Production security approval",
+      "status": "Done"
+    },
+    {
+      "decision": "PASS",
+      "explanation": "Requirement REQ-07 requires QA verification that sensitive identifiers are redacted on the target build. Linked evidence REC-9745 contains a passing retest by QA Lead Priya Nair on the exact target release, commit, service, and production environment, explicitly superseding the earlier failure. REC-6499 tests a different service (support-widget) and does not apply.",
+      "evidence_used": [
+        {
+          "note": "QA Lead Priya Nair verified all 28 redaction cases pass on release R2.4, commit b7a91f2, service atlas-assistant, environment production, superseding earlier REDACT-870.",
+          "issue": "REC-9745",
+          "comment_id": "12037",
+          "build_check": "applies"
+        }
+      ],
+      "outstanding": "",
+      "model_decision": "PASS",
+      "evidence_rejected": [],
+      "checks": [],
+      "target": {
+        "release": "R2.4",
+        "commit": "b7a91f2",
+        "prompt": "p7",
+        "environment": "production",
+        "service": "atlas-assistant"
+      },
+      "mandatory": true,
+      "criterion": "QA must verify that sensitive identifiers are redacted on the target build.",
+      "needs_prompt": false,
+      "id": "REQ-07",
+      "key": "TYN-329",
+      "error": null,
+      "title": "Sensitive log redaction",
+      "status": "Done"
+    },
+    {
+      "outstanding": "",
+      "evidence_rejected": [],
+      "evidence_used": [
+        {
+          "issue": "TYN-76",
+          "comment_id": "10378",
+          "note": "QA Lead Priya Nair reported that handoff delivery test HND-77 failed (0 of 12 escalated conversations reached the support queue because the queue adapter drops them), and Defect HND-DEF-4 is open.",
+          "build_check": "applies"
+        }
+      ],
+      "explanation": "Requirement REQ-08 requires that when an answer is escalated, a handoff must reach the support queue, including its linked delivery dependency. The linked queue-adapter verification record (REC-9635, comment 4) records a failed QA test where 0 of 12 escalated conversations reached the support queue due to the queue adapter dropping them, with an open defect.",
+      "decision": "FAIL",
+      "model_decision": "FAIL",
+      "checks": [],
+      "target": {
+        "release": "R2.4",
+        "commit": "b7a91f2",
+        "prompt": "p7",
+        "environment": "production",
+        "service": "atlas-assistant"
+      },
+      "mandatory": true,
+      "criterion": "When an answer is escalated, a handoff must reach the support queue, including its linked delivery dependency.",
+      "needs_prompt": false,
+      "id": "REQ-08",
+      "key": "TYN-48",
+      "error": null,
+      "title": "Human handoff delivery",
+      "status": "Done"
+    },
+    {
+      "decision": "INSUFFICIENT_EVIDENCE",
+      "explanation": "Requirement REQ-09 requires an approved rollback rehearsal to succeed on the target release and production configuration. Linked evidence records contain contradictory results on the target build: TYN-105 (REC-6011 comment 4) reports a successful rollback rehearsal, while TYN-174 (REC-6198 comment 2) reports a failure due to session record loss. Since there are equally authoritative, contradictory current records with no resolution, the decision must be INSUFFICIENT_EVIDENCE per the manifest rules.",
+      "evidence_used": [
+        {
+          "note": "Rollback rehearsal RB-401 passed successfully on the target build (release R2.4, commit b7a91f2, service atlas-assistant, production environment).",
+          "issue": "TYN-105",
+          "comment_id": "10523",
+          "build_check": "applies"
+        },
+        {
+          "note": "Rollback rehearsal RB-402 on the same target build failed because 214 session records written during the window were lost.",
+          "issue": "TYN-174",
+          "comment_id": "10866",
+          "build_check": "applies"
+        }
+      ],
+      "evidence_rejected": [],
+      "outstanding": "Resolve the contradictory rollback rehearsal results between TYN-105 and TYN-174.",
+      "model_decision": "INSUFFICIENT_EVIDENCE",
+      "checks": [],
+      "target": {
+        "release": "R2.4",
+        "commit": "b7a91f2",
+        "prompt": "p7",
+        "environment": "production",
+        "service": "atlas-assistant"
+      },
+      "mandatory": true,
+      "criterion": "An approved rollback rehearsal must succeed on the target release and production configuration.",
+      "needs_prompt": false,
+      "id": "REQ-09",
+      "key": "TYN-143",
+      "error": null,
+      "title": "Rollback rehearsal",
+      "status": "Done"
+    },
+    {
+      "outstanding": "",
+      "evidence_used": [
+        {
+          "note": "Priya Nair (QA Lead) verifies in comment 5 that 60 of 60 mandatory document parsing cases pass on target build (R2.4, commit b7a91f2, service atlas-assistant, environment production), superseding the earlier failure in comment 4.",
+          "issue": "TYN-9",
+          "comment_id": "10044",
+          "build_check": "applies"
+        }
+      ],
+      "decision": "PASS",
+      "explanation": "The acceptance criterion for REQ-10 requires that the target build pass all 60 mandatory document parsing cases. Evidence record TYN-9 (REC-9611) contains a retest by QA Lead Priya Nair confirming that all 60 of 60 mandatory parsing cases pass on the exact target release, commit, service, and environment. This explicitly supersedes the initial 59/60 failure.",
+      "evidence_rejected": [],
+      "model_decision": "PASS",
+      "checks": [],
+      "target": {
+        "release": "R2.4",
+        "commit": "b7a91f2",
+        "prompt": "p7",
+        "environment": "production",
+        "service": "atlas-assistant"
+      },
+      "mandatory": true,
+      "criterion": "The target build must pass all 60 mandatory document parsing cases.",
+      "needs_prompt": false,
+      "id": "REQ-10",
+      "key": "TYN-57",
+      "error": null,
+      "title": "Document parsing completeness",
+      "status": "Done"
+    },
+    {
+      "evidence_rejected": [
+        {
+          "comment_id": "10508",
+          "note": "Wrong build (checked by code). Referenced QA test in REC-8801 was for R2.4 commit 42d09ce instead of target commit b7a91f2.",
+          "issue": "TYN-102"
+        }
+      ],
+      "decision": "INSUFFICIENT_EVIDENCE",
+      "explanation": "Requirement REQ-11 requires QA verification of keyboard navigation and focus handling for the handoff interface on the target release (R2.4, commit b7a91f2). The linked engineering record REC-8515 only contains a developer self-test, and the linked QA record REC-8801 references an assessment from release R2.4 on an older commit (42d09ce). Therefore, there is insufficient QA evidence for the exact target release and commit.",
+      "outstanding": "Need valid QA verification of keyboard navigation and focus handling on commit b7a91f2 for release R2.4.",
+      "evidence_used": [
+        {
+          "comment_id": "11293",
+          "issue": "TYN-259",
+          "note": "Developer self-test for REC-8515 without QA verification for target release/commit.",
+          "build_check": "unclear"
+        }
+      ],
+      "model_decision": "INSUFFICIENT_EVIDENCE",
+      "checks": [
+        "TYN-102 comment 10508 is about another build; not counted."
+      ],
+      "target": {
+        "release": "R2.4",
+        "commit": "b7a91f2",
+        "prompt": "p7",
+        "environment": "production",
+        "service": "atlas-assistant"
+      },
+      "mandatory": true,
+      "criterion": "QA must verify keyboard navigation and focus handling for the handoff interface on the target release.",
+      "needs_prompt": false,
+      "id": "REQ-11",
+      "key": "TYN-162",
+      "error": null,
+      "title": "Accessible keyboard handoff",
+      "status": "Done"
+    },
+    {
+      "decision": "FAIL",
+      "evidence_used": [
+        {
+          "comment_id": "11648",
+          "issue": "REC-5957",
+          "note": "QA verification run STREAM-731 on target build (release R2.4, commit b7a91f2, service atlas-assistant, environment production, prompt p7) shows 49 of 50 cases pass, with STREAM-50 producing a duplicated final message, violating the requirement that every mandatory streaming case must complete without duplicate or missing final messages.",
+          "build_check": "applies"
+        }
+      ],
+      "outstanding": "",
+      "explanation": "The requirement REQ-12 specifies that every mandatory streaming case must complete without duplicate or missing final messages. The QA verification evidence in REC-5957 comment 11648 for the target build (R2.4, commit b7a91f2, service atlas-assistant, environment production, prompt p7) reports 49 of 50 passing cases with a duplicated final message in STREAM-50. Because a partial pass does not meet the acceptance criterion, the requirement fails.",
+      "model_decision": "FAIL",
+      "evidence_rejected": [],
+      "checks": [],
+      "target": {
+        "release": "R2.4",
+        "commit": "b7a91f2",
+        "prompt": "p7",
+        "environment": "production",
+        "service": "atlas-assistant"
+      },
+      "mandatory": true,
+      "criterion": "Every mandatory streaming case must complete without duplicate or missing final messages.",
+      "needs_prompt": false,
+      "id": "REQ-12",
+      "key": "TYN-400",
+      "error": null,
+      "title": "Streaming completion integrity",
+      "status": "Done"
+    }
+  ]
+}

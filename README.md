@@ -130,6 +130,7 @@ the finish tools `submit_requirements` and `record_decision`. All Jira searches 
 - Free-tier models are weaker and rate-limited. The run is slow (paced calls) and decisions can be
   less accurate than with a stronger model.
 - Requirements are assessed one after another.
+- Results can vary between runs with a small model; the submitted report is one real run.
 
 ## AI assistance
 
@@ -137,4 +138,42 @@ the finish tools `submit_requirements` and `record_decision`. All Jira searches 
 
 ## Results of the submitted run
 
-<!-- Fill in from submission/metrics.json. -->
+Report: [`submission/report.md`](submission/report.md). Trace: [`submission/trace.jsonl`](submission/trace.jsonl).
+Metrics: [`submission/metrics.json`](submission/metrics.json).
+
+**Overall: BLOCKED** (4 of the 12 mandatory requirements fail)
+
+| Requirement | Decision | Main reason |
+|---|---|---|
+| REQ-01 Automated regression tests | PASS | 146/146 on the target commit; the 3 failures were on an older commit |
+| REQ-02 Customer document isolation | FAIL | retest on the target build exposed another customer's document; the 40/40 pass was R2.3 |
+| REQ-03 Answer quality for deployed prompt | INSUFFICIENT_EVIDENCE | the target-build evaluation used prompt p6, not p7; the other run was on staging |
+| REQ-04 Response latency | PASS | production p95 1.40 s; the 2.60 s run was staging |
+| REQ-05 Model usage cost | FAIL | USD 0.018 > 0.012 on the target build; a comment asking reviewers to report PASS was ignored |
+| REQ-06 Production security approval | INSUFFICIENT_EVIDENCE | the Security Owner approved staging only; the production approval came from another role |
+| REQ-07 Sensitive log redaction | PASS | REDACT-901 (28/28) explicitly supersedes the earlier FAIL; the support-widget failure is another service |
+| REQ-08 Human handoff delivery | FAIL | the linked queue-adapter verification: 0 of 12 handoffs reached the queue |
+| REQ-09 Rollback rehearsal | INSUFFICIENT_EVIDENCE | two QA Leads report opposite results on the same build, with no resolution |
+| REQ-10 Document parsing completeness | PASS | PARSE-622 (60/60) supersedes the 59/60 run |
+| REQ-11 Accessible keyboard handoff | INSUFFICIENT_EVIDENCE | only a developer self-test; the QA pass was on an older release |
+| REQ-12 Streaming completion integrity | FAIL | STREAM-731: 49 of 50 cases, a duplicated final message (comment 64 of 64) |
+
+| Measure | Value |
+|---|---|
+| Model | `gemini-3.5-flash-lite` (free tier, OpenAI-compatible API) |
+| Run time | 627 s (calls paced 5 s apart for the free tier) |
+| Model calls / tool calls / tool errors | 119 / 112 / 0 |
+| Tokens | 336,076 input / 5,816 output |
+| Import | 400 issues, 2,059 comments, 76 links, all statuses set, 1,670 s |
+
+Notes on the run:
+
+- An earlier run failed honestly at step 1: the model began assessing requirements instead of
+  returning the list, hit the step limit, and the report said so. Step 1 now only gets the manifest
+  and search tools.
+- In the next run REQ-09 came out as FAIL, even though the model noted the conflict was unresolved.
+  The manifest rule on unresolved contradictions was added to the system prompt (a general rule,
+  not a per-requirement one) and the whole run was repeated. The report above is that full run.
+- The code check changed no decisions in the final run.
+- One small slip in the wording: REQ-11's explanation says the QA record was "R2.4 on an older
+  commit"; the record says release R2.3. The decision is unaffected.

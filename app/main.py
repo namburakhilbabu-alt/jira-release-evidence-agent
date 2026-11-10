@@ -11,7 +11,7 @@ import os
 from app import config, report, rules
 from app.agent import Agent
 from app.jira import Jira
-from app.tools import RECORD_DECISION, SUBMIT_REQUIREMENTS, Tools, short
+from app.tools import FIND_TOOLS, RECORD_DECISION, SUBMIT_REQUIREMENTS, Tools, short
 from app.trace import Trace
 
 
@@ -43,9 +43,10 @@ def main():
         print("Finding requirements...")
         answer, error = agent.run(
             "find_requirements",
-            f"Target release: {release}. Read the manifest and search Jira to find every requirement "
-            "that must be assessed. Then call submit_requirements.",
-            SUBMIT_REQUIREMENTS, tools, max_steps)
+            f"Target release: {release}. Only find the requirements, do not assess them. Read the "
+            "manifest and search Jira for every requirement that must be assessed, then call "
+            "submit_requirements with their ids.",
+            SUBMIT_REQUIREMENTS, tools, max_steps, allowed=FIND_TOOLS)
         ids = answer["requirements"] if answer else []
         if error:
             warnings.append(f"Could not get the requirement list: {error}")

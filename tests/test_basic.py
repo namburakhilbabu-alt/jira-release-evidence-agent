@@ -120,7 +120,8 @@ def reply(name, args, call_id="1"):
 
 
 def scripted_agent(monkeypatch, replies):
-    for name, value in {"LLM_API_KEY": "x", "LLM_BASE_URL": "http://localhost", "LLM_MODEL": "test"}.items():
+    for name, value in {"LLM_API_KEY": "x", "LLM_BASE_URL": "http://localhost", "LLM_MODEL": "test",
+                        "LLM_SECONDS_BETWEEN_CALLS": "0"}.items():
         monkeypatch.setenv(name, value)
     agent = Agent(FakeLog())
     agent.client = SimpleNamespace(chat=SimpleNamespace(completions=SimpleNamespace(

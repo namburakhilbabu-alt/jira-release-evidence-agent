@@ -1,0 +1,14 @@
+# secrets
+.env
+
+# python
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# development runs (the final run goes to submission/, which IS committed)
+outputs/
+
+# personal explainer, not part of the submission
+HOW_IT_WORKS.html
